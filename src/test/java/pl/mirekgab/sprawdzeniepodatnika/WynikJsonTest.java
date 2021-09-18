@@ -39,7 +39,7 @@ public class WynikJsonTest {
     public void testWczytaj() throws Exception {
         System.out.println("wczytaj");
         PlikJsonSerwis instance = new PlikJsonSerwis();
-        WynikJson wj = instance.wczytaj("../20191121.json");
+        WynikJson wj = instance.wczytaj("20191121.json");
         System.out.println(wj);
         System.out.println(wj.getSkrotyPodatnikowCzynnych().size());
         System.out.println(wj.getSkrotyPodatnikowZwolnionych().size());

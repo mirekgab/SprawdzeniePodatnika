@@ -35,8 +35,10 @@ public class SprawdzeniePodatnika {
      */
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException, FileNotFoundException, ParseException {
         System.out.println("Sprawdzenie podatnika");
-        if (args.length!=2) {
+        
+        if (args==null || args.length!=2) {
             System.out.println("Wywołanie programu: SprawdzeniePodatnika \"plikDane\" \"plikPlaski\"");
+            System.exit(0);
         }
         
         String plikDane = args[0];
@@ -46,6 +48,7 @@ public class SprawdzeniePodatnika {
         List<DanePodatnika> lista = daneTestowe.wczytaj(plikDane);
 
         WynikJson plikJson = PlikJsonSerwis.wczytaj(plikPlaski);
+        
         String data = plikJson.getDataGenerowaniaDanych();
         int liczbaTransformacji = plikJson.getLiczbaTransformacji();
 
