@@ -45,7 +45,10 @@ public class Main {
             String plikPlaski = args[2];
 
             SprawdzeniePodatnika sp = new SprawdzeniePodatnika();
-            List<DanePodatnika> lista = sp.sprawdzDane(plikDane, liczbaLiniiNaglowka, plikPlaski);
+            sp.wczytajPlikDanych(plikDane, liczbaLiniiNaglowka);
+            sp.wczytajPlikJson(plikPlaski);
+            
+            List<DanePodatnika> lista = sp.sprawdz();
 
             for (DanePodatnika d : lista) {
                 System.out.println(d);

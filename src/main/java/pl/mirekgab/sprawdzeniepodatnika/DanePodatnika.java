@@ -33,7 +33,7 @@ public class DanePodatnika {
     private String nrbWirtualny;
     private int wynikWeryfikacji;
 
-    DanePodatnika(String nip, String nrb) {
+    public DanePodatnika(String nip, String nrb) {
         this.nip = nip;
         this.nrb = nrb;
     }

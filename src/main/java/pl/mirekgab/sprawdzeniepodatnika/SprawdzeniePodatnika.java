@@ -29,6 +29,68 @@ import org.json.simple.parser.ParseException;
  * @author mirek
  */
 public class SprawdzeniePodatnika {
+    private WynikJson wynikJson;
+    private DaneTestoweSerwis daneTestowe;
+    private List<DanePodatnika> listaDane;
+    
+    public String dataGenerowaniaDanych() {
+        return wynikJson.getDataGenerowaniaDanych();
+    }
+    
+    public String liczbaIteracji() {
+        return String.valueOf(wynikJson.getLiczbaTransformacji());
+    }
+    
+    public String getInfo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("liczba danych testowych "+listaDane.size());
+        sb.append("\nliczba danych podatnik czynny "+wynikJson.getSkrotyPodatnikowCzynnych().size());
+        sb.append("\nliczba danych podatnik zwolniony "+wynikJson.getSkrotyPodatnikowZwolnionych().size());
+        sb.append("\nliczba transformacji "+wynikJson.getLiczbaTransformacji());
+        sb.append("\ndata generowania danych "+wynikJson.getDataGenerowaniaDanych());
+        return sb.toString();
+    }
+    
+                
+    
+    public void wczytajPlikDanych(String plikDane, int liczbaLiniiNaglowka) throws IOException {
+        DaneTestoweSerwis daneTestowe = new DaneTestoweSerwis();
+        listaDane = daneTestowe.wczytaj(plikDane, liczbaLiniiNaglowka);
+        
+    }
+    
+    public void wczytajPlikJson(String plikJson) throws IOException, FileNotFoundException, ParseException {
+        wynikJson = PlikJsonSerwis.wczytaj(plikJson);
+        
+        String data = wynikJson.getDataGenerowaniaDanych();
+        int liczbaTransformacji = wynikJson.getLiczbaTransformacji();
+        
+    }
+    
+    public List<DanePodatnika> sprawdz() throws NoSuchAlgorithmException {
+        String data = wynikJson.getDataGenerowaniaDanych();
+        int liczbaTransformacji = wynikJson.getLiczbaTransformacji();
+
+        for (DanePodatnika d : listaDane) {
+            int b = PlikJsonSerwis.szukaj(wynikJson, ObliczHash.obliczHash(data, d.getNip(), d.getNrb(), liczbaTransformacji));
+            d.setWynikWeryfikacji(b);
+        }
+
+        //teraz sprawdzam podatników, którzy nie byli na liście czynnych i zamkniętych
+        for (DanePodatnika d : listaDane) {
+            //jeżeli brak danych do tej pory, to sprawdzam maski rachunków bankowych
+            if (d.getWynikWeryfikacji() == 0) {
+                int wynik = Funkcje.sprawdzDane(wynikJson, d, wynikJson.getMaski());
+                d.setWynikWeryfikacji(wynik);
+            }
+        }
+
+        return listaDane;        
+    }
+
+    public List<DanePodatnika> getListaDane() {
+        return listaDane;
+    }
 
     /**
      * @param plikDane plik z danymi NIP[tabulator]RACHUNEK_BANKOWY
@@ -40,36 +102,36 @@ public class SprawdzeniePodatnika {
      * @throws java.io.FileNotFoundException
      * @throws org.json.simple.parser.ParseException
      */
-    public List<DanePodatnika> sprawdzDane(String plikDane, int liczbaLiniiNaglowka, String plikPlaski) throws IOException, NoSuchAlgorithmException, FileNotFoundException, ParseException {
-        
-        DaneTestoweSerwis daneTestowe = new DaneTestoweSerwis();
-        List<DanePodatnika> lista = daneTestowe.wczytaj(plikDane, liczbaLiniiNaglowka);
-
-        WynikJson plikJson = PlikJsonSerwis.wczytaj(plikPlaski);
-        
-        String data = plikJson.getDataGenerowaniaDanych();
-        int liczbaTransformacji = plikJson.getLiczbaTransformacji();
-
-        System.out.println("wczytano");
-        System.out.println(plikJson.getSkrotyPodatnikowCzynnych().size()+" czynnych");
-        System.out.println(plikJson.getSkrotyPodatnikowZwolnionych().size()+" zwolnionych");
-        System.out.println(plikJson.getMaski().size()+" maski");        
-
-        for (DanePodatnika d : lista) {
-            int b = PlikJsonSerwis.szukaj(plikJson, ObliczHash.obliczHash(data, d.getNip(), d.getNrb(), liczbaTransformacji));
-            d.setWynikWeryfikacji(b);
-        }
-
-        //teraz sprawdzam podatników, którzy nie byli na liście czynnych i zamkniętych
-        for (DanePodatnika d : lista) {
-            //jeżeli brak danych do tej pory, to sprawdzam maski rachunków bankowych
-            if (d.getWynikWeryfikacji() == 0) {
-                int wynik = Funkcje.sprawdzDane(plikJson, d, plikJson.getMaski());
-                d.setWynikWeryfikacji(wynik);
-            }
-        }
-
-        return lista;
-    }
+//    public List<DanePodatnika> sprawdzDane(String plikDane, int liczbaLiniiNaglowka, String plikPlaski) throws IOException, NoSuchAlgorithmException, FileNotFoundException, ParseException {
+//        
+//        DaneTestoweSerwis daneTestowe = new DaneTestoweSerwis();
+//        List<DanePodatnika> lista = daneTestowe.wczytaj(plikDane, liczbaLiniiNaglowka);
+//
+//        WynikJson plikJson = PlikJsonSerwis.wczytaj(plikPlaski);
+//        
+//        String data = plikJson.getDataGenerowaniaDanych();
+//        int liczbaTransformacji = plikJson.getLiczbaTransformacji();
+//
+//        System.out.println("wczytano");
+//        System.out.println(plikJson.getSkrotyPodatnikowCzynnych().size()+" czynnych");
+//        System.out.println(plikJson.getSkrotyPodatnikowZwolnionych().size()+" zwolnionych");
+//        System.out.println(plikJson.getMaski().size()+" maski");        
+//
+//        for (DanePodatnika d : lista) {
+//            int b = PlikJsonSerwis.szukaj(plikJson, ObliczHash.obliczHash(data, d.getNip(), d.getNrb(), liczbaTransformacji));
+//            d.setWynikWeryfikacji(b);
+//        }
+//
+//        //teraz sprawdzam podatników, którzy nie byli na liście czynnych i zamkniętych
+//        for (DanePodatnika d : lista) {
+//            //jeżeli brak danych do tej pory, to sprawdzam maski rachunków bankowych
+//            if (d.getWynikWeryfikacji() == 0) {
+//                int wynik = Funkcje.sprawdzDane(plikJson, d, plikJson.getMaski());
+//                d.setWynikWeryfikacji(wynik);
+//            }
+//        }
+//
+//        return lista;
+//    }
 
 }
