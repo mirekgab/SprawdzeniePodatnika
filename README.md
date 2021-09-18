@@ -10,3 +10,5 @@ Jak uruchomić:
   <pre>mvn compile
 mvn exec:java -Dexec.mainClass=pl.mirekgab.sprawdzeniepodatnika.SprawdzeniePodatnika -Dexec.args="dane_testowe.txt 20191121.json"</pre>
 
+Dane testowe pobrane ze strony
+https://www.gov.pl/web/kas/plik-plaski
