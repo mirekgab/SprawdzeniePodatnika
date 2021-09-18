@@ -31,21 +31,19 @@ import org.json.simple.parser.ParseException;
 public class SprawdzeniePodatnika {
 
     /**
-     * @param args the command line arguments
+     * @param plikDane plik z danymi NIP[tabulator]RACHUNEK_BANKOWY
+     * @param liczbaLiniiNaglowka liczba linii komentarza w plikDane
+     * @param plikPlaski plik json publikowany przez MF
+     * @return lista obiektów DanePodatnika
+     * @throws java.io.IOException
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.io.FileNotFoundException
+     * @throws org.json.simple.parser.ParseException
      */
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, FileNotFoundException, ParseException {
-        System.out.println("Sprawdzenie podatnika");
-        
-        if (args==null || args.length!=2) {
-            System.out.println("Wywołanie programu: SprawdzeniePodatnika \"plikDane\" \"plikPlaski\"");
-            System.exit(0);
-        }
-        
-        String plikDane = args[0];
-        String  plikPlaski = args[1];
+    public List<DanePodatnika> sprawdzDane(String plikDane, int liczbaLiniiNaglowka, String plikPlaski) throws IOException, NoSuchAlgorithmException, FileNotFoundException, ParseException {
         
         DaneTestoweSerwis daneTestowe = new DaneTestoweSerwis();
-        List<DanePodatnika> lista = daneTestowe.wczytaj(plikDane);
+        List<DanePodatnika> lista = daneTestowe.wczytaj(plikDane, liczbaLiniiNaglowka);
 
         WynikJson plikJson = PlikJsonSerwis.wczytaj(plikPlaski);
         
@@ -71,9 +69,7 @@ public class SprawdzeniePodatnika {
             }
         }
 
-        for (DanePodatnika d : lista) {
-            System.out.println(d);
-        }
+        return lista;
     }
 
 }

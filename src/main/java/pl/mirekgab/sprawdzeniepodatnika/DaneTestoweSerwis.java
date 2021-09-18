@@ -32,7 +32,8 @@ import java.util.List;
  */
 public class DaneTestoweSerwis {
 
-    public List<DanePodatnika> wczytaj(String plik) throws FileNotFoundException, IOException {
+    
+    public List<DanePodatnika> wczytaj(String plik, int liczbaLiniiNaglowka) throws FileNotFoundException, IOException {
         List<DanePodatnika> lista = new ArrayList<>();
      
         FileInputStream fis = new FileInputStream(plik);
@@ -42,7 +43,7 @@ public class DaneTestoweSerwis {
         String linia;
         int licznik = 0;
         while ((linia = br.readLine()) != null) {
-            if (licznik > 1) {
+            if (licznik > liczbaLiniiNaglowka-1) {
                 String[] rekord = linia.split("\t");
                 DanePodatnika dt = new DanePodatnika(rekord[0], rekord[1]);
                 lista.add(dt);
