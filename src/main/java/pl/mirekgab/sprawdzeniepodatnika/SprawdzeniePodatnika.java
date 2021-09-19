@@ -29,44 +29,48 @@ import org.json.simple.parser.ParseException;
  * @author mirek
  */
 public class SprawdzeniePodatnika {
+
     private WynikJson wynikJson;
     private DaneTestoweSerwis daneTestowe;
     private List<DanePodatnika> listaDane;
-    
+
     public String dataGenerowaniaDanych() {
         return wynikJson.getDataGenerowaniaDanych();
     }
-    
+
     public String liczbaIteracji() {
         return String.valueOf(wynikJson.getLiczbaTransformacji());
     }
-    
+
     public String getInfo() {
         StringBuilder sb = new StringBuilder();
-        sb.append("liczba danych testowych "+listaDane.size());
-        sb.append("\nliczba danych podatnik czynny "+wynikJson.getSkrotyPodatnikowCzynnych().size());
-        sb.append("\nliczba danych podatnik zwolniony "+wynikJson.getSkrotyPodatnikowZwolnionych().size());
-        sb.append("\nliczba transformacji "+wynikJson.getLiczbaTransformacji());
-        sb.append("\ndata generowania danych "+wynikJson.getDataGenerowaniaDanych());
+        sb.append("liczba danych testowych ")
+                .append(listaDane.size())
+                .append("\nliczba danych podatnik czynny ")
+                .append(wynikJson.getSkrotyPodatnikowCzynnych().size())
+                .append("\nliczba danych podatnik zwolniony ")
+                .append(wynikJson.getSkrotyPodatnikowZwolnionych().size())
+                .append("\nliczba transformacji ")
+                .append(wynikJson.getLiczbaTransformacji())
+                .append("\ndata generowania danych ")
+                .append(wynikJson.getDataGenerowaniaDanych());
         return sb.toString();
     }
-    
-                
-    
+
     public void wczytajPlikDanych(String plikDane, int liczbaLiniiNaglowka) throws IOException {
         DaneTestoweSerwis daneTestowe = new DaneTestoweSerwis();
         listaDane = daneTestowe.wczytaj(plikDane, liczbaLiniiNaglowka);
-        
+
     }
-    
+
     public void wczytajPlikJson(String plikJson) throws IOException, FileNotFoundException, ParseException {
         wynikJson = PlikJsonSerwis.wczytaj(plikJson);
-        
+
         String data = wynikJson.getDataGenerowaniaDanych();
         int liczbaTransformacji = wynikJson.getLiczbaTransformacji();
-        
+
     }
-    
+
     public List<DanePodatnika> sprawdz() throws NoSuchAlgorithmException {
         String data = wynikJson.getDataGenerowaniaDanych();
         int liczbaTransformacji = wynikJson.getLiczbaTransformacji();
@@ -85,7 +89,7 @@ public class SprawdzeniePodatnika {
             }
         }
 
-        return listaDane;        
+        return listaDane;
     }
 
     public List<DanePodatnika> getListaDane() {
@@ -133,5 +137,4 @@ public class SprawdzeniePodatnika {
 //
 //        return lista;
 //    }
-
 }
